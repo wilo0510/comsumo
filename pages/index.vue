@@ -109,8 +109,16 @@
       type="button"
       class="btn btn-primary mt-2">Realizar calculos</button>
     </div>
-    <div class="row justify-content-start ml-2">
-      <p>{{personLightMeter}} tuvo un consumo de {{}}</p>
+    <div class="row justify-content-center ml-auto mt-2  w-100">
+      <b-table 
+      :striped="true" 
+      :hover="true" 
+      :fields="fields" 
+      :items="items"
+      :bordered="true" 
+      responsive="xl">
+        
+      </b-table>
     </div>
     <b-modal
     v-model="visibilityHelpModal" 
@@ -143,7 +151,22 @@ export default {
       kwByPersonLM        : '',
       kwByNormalP         : '',
       valuePersonLM       : '',
-      valueNormalP        : ''
+      valueNormalP        : '',
+      fields              : [
+        {
+          key   : 'name',
+          label : "Nombre"
+        },
+        {
+          key   : 'kwByPerson',
+          label : 'Kw consumidos'
+        },
+        {
+          key   : 'valueByPerson',
+          label : 'Valor correspondiente'
+        }
+      ],
+      items               : []
 
     } 
   },
@@ -186,8 +209,19 @@ export default {
           this.kwByNormalP    = this.totalKW - this.kwByPersonLM
           this.valuePersonLM  = this.kwUnitValue  * this.kwByPersonLM
           this.valueNormalP   = this.kwUnitValue  * this.kwByNormalP 
-        }
-        console.log(this.kwUnitValue)
+          this.items=[
+            {
+              name          : this.personLightMeter,
+              kwByPerson    : this.kwByPersonLM,
+              valueByPerson : this.valuePersonLM
+            },
+            {
+              name          : this.normalPerson,
+              kwByPerson    : this.kwByNormalP,
+              valueByPerson : this.valueNormalP
+            }
+          ]
+        }        
       }
       
     }
