@@ -105,9 +105,12 @@
     
     <div class="row justify-content-center">
       <button
-      @click="Calculate()" 
+      @click="calculate()" 
       type="button"
       class="btn btn-primary mt-2">Realizar calculos</button>
+    </div>
+    <div class="row justify-content-start ml-2">
+      <p>{{personLightMeter}} tuvo un consumo de {{}}</p>
     </div>
     <b-modal
     v-model="visibilityHelpModal" 
@@ -135,7 +138,13 @@ export default {
       totalKW             : '',
       lastKw              : '',
       actualKw            : '',
-      imgRoute            : ''  
+      imgRoute            : '',
+      kwUnitValue         : '',
+      kwByPersonLM        : '',
+      kwByNormalP         : '',
+      valuePersonLM       : '',
+      valueNormalP        : ''
+
     } 
   },
   methods:{
@@ -149,8 +158,38 @@ export default {
       }
       this.visibilityHelpModal=true
     },
-    Calculate(){
-      console.log("Calculando")
+    calculate(){
+      if(this.personLightMeter==""
+      ||  this.normalPerson===""
+      ||  this.totalValue===""
+      ||  this.totalKW===""
+      ||  this.lastKw===""
+      ||  this.actualKw===""){
+        this.$swal.fire({
+          title: 'Error!',
+          text: 'Diligencie todos los campos',
+          icon: 'error',
+          confirmButtonText: 'OK'
+        })
+      }else{
+        this.kwUnitValue  = this.totalValue / this.totalKW
+        this.kwByPersonLM = this.actualKw-this.lastKw
+        if(this.kwByPersonLM<0)
+        {
+          this.$swal.fire({
+            title: 'Error!',
+            text: 'El valor de los KW de el mes actual no pueden ser menores que el mes pasado',
+            icon: 'error',
+            confirmButtonText: 'OK'
+          })
+        }else{
+          this.kwByNormalP    = this.totalKW - this.kwByPersonLM
+          this.valuePersonLM  = this.kwUnitValue  * this.kwByPersonLM
+          this.valueNormalP   = this.kwUnitValue  * this.kwByNormalP 
+        }
+        console.log(this.kwUnitValue)
+      }
+      
     }
   }
 }
